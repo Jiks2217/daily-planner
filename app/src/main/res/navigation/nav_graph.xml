@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph" app:startDestination="@id/nav_home">
+    <fragment android:id="@+id/nav_home" android:name="com.group5.dailyplanner.DashboardFragment" android:label="Home" />
+    <fragment android:id="@+id/nav_schedule" android:name="com.group5.dailyplanner.ScheduleFragment" android:label="Schedule" />
+    <fragment android:id="@+id/nav_review" android:name="com.group5.dailyplanner.ReviewFragment" android:label="Review" />
+    <fragment android:id="@+id/nav_history" android:name="com.group5.dailyplanner.HistoryFragment" android:label="History" />
+    <fragment android:id="@+id/nav_settings" android:name="com.group5.dailyplanner.SettingsFragment" android:label="Settings" />
+</navigation>
