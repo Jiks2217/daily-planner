@@ -88,6 +88,8 @@ public class ScheduleFragment extends Fragment {
     }
 
     private void showAddDialog() {
+        new AddTaskSheet().show(getParentFragmentManager(), "AddTask");
+        if(true) return;
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_activity, null);
         TextInputEditText etTitle = dialogView.findViewById(R.id.etTitle);
         TextInputEditText etStartTime = dialogView.findViewById(R.id.etStartTime);

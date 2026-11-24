@@ -14,74 +14,93 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ReviewFragment extends Fragment {
-    private ReviewViewModel viewModel;
+    private ReviewViewModel reviewViewModel;
+    private ActivityViewModel activityViewModel;
     private ReviewItem existingReview;
     private String currentDate;
-
-    private TextInputEditText etAccomplishment, etChallenges, etLearned, etImprove;
+    private TextInputEditText etAccomplishment, etChallenges, etImprove;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review, container, false);
 
-        TextView tvReviewDate = view.findViewById(R.id.tvReviewDate);
         etAccomplishment = view.findViewById(R.id.etAccomplishment);
         etChallenges = view.findViewById(R.id.etChallenges);
-        etLearned = view.findViewById(R.id.etLearned);
         etImprove = view.findViewById(R.id.etImprove);
         MaterialButton btnSave = view.findViewById(R.id.btnSaveReview);
+        TextView tvCoachSummary = view.findViewById(R.id.tvCoachSummary);
+        TextView tvCoachCategory = view.findViewById(R.id.tvCoachCategory);
 
-        // Setup Date
-        Date now = new Date();
-        SimpleDateFormat sdfDisplay = new SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault());
-        SimpleDateFormat sdfDb = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        currentDate = sdfDb.format(now);
-        tvReviewDate.setText(sdfDisplay.format(now));
+        currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-        viewModel = new ViewModelProvider(this).get(ReviewViewModel.class);
+        reviewViewModel = new ViewModelProvider(this).get(ReviewViewModel.class);
+        activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
-        // Load existing review for today
-        viewModel.getReview(currentDate, item -> {
+        // 1. Calculate Metrics (The Coach)
+        activityViewModel.getAllActivities().observe(getViewLifecycleOwner(), activities -> {
+            int total = activities.size();
+            int completed = 0;
+            Map<String, Integer> categoryCounts = new HashMap<>();
+
+            for (ActivityItem item : activities) {
+                if (item.isCompleted) completed++;
+                // Count categories to find the most active one
+                categoryCounts.put(item.category, categoryCounts.getOrDefault(item.category, 0) + 1);
+            }
+
+            String summary = String.format(Locale.getDefault(), "You completed %d of %d tasks today.", completed, total);
+            tvCoachSummary.setText(summary);
+
+            String topCat = "No tasks scheduled.";
+            if (total > 0) {
+                int max = 0;
+                for (Map.Entry<String, Integer> entry : categoryCounts.entrySet()) {
+                    if (entry.getValue() > max) { max = entry.getValue(); topCat = "Most focus on: " + entry.getKey(); }
+                }
+            }
+            tvCoachCategory.setText(topCat);
+        });
+
+        // 2. Load existing review
+        reviewViewModel.getReview(currentDate, item -> {
             if (item != null) {
                 existingReview = item;
                 requireActivity().runOnUiThread(() -> {
                     etAccomplishment.setText(item.accomplishment);
                     etChallenges.setText(item.challenges);
-                    etLearned.setText(item.learned);
                     etImprove.setText(item.improve);
                 });
             }
         });
 
+        // 3. Save Review
         btnSave.setOnClickListener(v -> {
             String acc = etAccomplishment.getText().toString().trim();
             String chal = etChallenges.getText().toString().trim();
-            String learn = etLearned.getText().toString().trim();
             String imp = etImprove.getText().toString().trim();
 
-            if (acc.isEmpty() && chal.isEmpty() && learn.isEmpty() && imp.isEmpty()) {
+            if (acc.isEmpty() && chal.isEmpty() && imp.isEmpty()) {
                 Toast.makeText(getContext(), "Please write something before saving.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (existingReview == null) {
-                // Create new
-                ReviewItem newReview = new ReviewItem(currentDate, acc, chal, learn, imp);
-                viewModel.saveReview(newReview, false);
+                reviewViewModel.saveReview(new ReviewItem(currentDate, acc, chal, "", imp), false);
             } else {
-                // Update existing
                 existingReview.accomplishment = acc;
                 existingReview.challenges = chal;
-                existingReview.learned = learn;
                 existingReview.improve = imp;
-                viewModel.saveReview(existingReview, true);
+                reviewViewModel.saveReview(existingReview, true);
             }
             
-            Toast.makeText(getContext(), "Review saved successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Review saved to database!", Toast.LENGTH_SHORT).show();
         });
 
         return view;
