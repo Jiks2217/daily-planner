@@ -29,6 +29,11 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    // Needed for Swipe-to-Delete
+    public ActivityItem getActivityAt(int position) {
+        return activities.get(position);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -45,7 +50,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         holder.cbComplete.setOnCheckedChangeListener(null);
         holder.cbComplete.setChecked(current.isCompleted);
 
-        // HCI EFFECT: Strike-through and fade if completed
         if (current.isCompleted) {
             holder.tvTitle.setPaintFlags(holder.tvTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.tvTitle.setTextColor(Color.parseColor("#999999"));
