@@ -11,14 +11,17 @@ import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
     private List<ReviewItem> reviews = new ArrayList<>();
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener { void onItemClick(ReviewItem item); }
+    public void setOnItemClickListener(OnItemClickListener listener) { this.listener = listener; }
 
     public void setReviews(List<ReviewItem> reviews) {
         this.reviews = reviews;
         notifyDataSetChanged();
     }
 
-    @NonNull
-    @Override
+    @NonNull @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history_review, parent, false);
         return new ViewHolder(view);
@@ -31,15 +34,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.tvScore.setText(item.score + "/100");
         holder.tvAccomplishment.setText("Accomplishment: " + (item.accomplishment.isEmpty() ? "None" : item.accomplishment));
 
-        if (item.score >= 80) holder.tvScore.setTextColor(android.graphics.Color.parseColor("#4CAF50")); // Green
-        else if (item.score >= 50) holder.tvScore.setTextColor(android.graphics.Color.parseColor("#FFB74D")); // Orange
-        else holder.tvScore.setTextColor(android.graphics.Color.parseColor("#E57373")); // Red
+        if (item.score >= 80) holder.tvScore.setTextColor(android.graphics.Color.parseColor("#4CAF50"));
+        else if (item.score >= 50) holder.tvScore.setTextColor(android.graphics.Color.parseColor("#FFB74D"));
+        else holder.tvScore.setTextColor(android.graphics.Color.parseColor("#E57373"));
+
+        holder.itemView.setOnClickListener(v -> { if (listener != null) listener.onItemClick(item); });
     }
 
-    @Override
-    public int getItemCount() {
-        return reviews.size();
-    }
+    @Override public int getItemCount() { return reviews.size(); }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvDate, tvScore, tvAccomplishment;

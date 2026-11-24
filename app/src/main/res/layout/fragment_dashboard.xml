@@ -11,12 +11,11 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Header -->
         <TextView
             android:id="@+id/tvGreeting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Good morning"
+            android:text="Good morning, User"
             android:textSize="28sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-medium"
@@ -28,103 +27,57 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="32dp">
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/ic_calendar"
-                app:tint="#666666" />
-
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Loading date..."
-                android:textSize="15sp"
-                android:textColor="#666666"
-                android:layout_marginStart="8dp" />
+            android:layout_marginBottom="24dp">
+            <ImageView android:layout_width="18dp" android:layout_height="18dp" android:src="@drawable/ic_calendar" app:tint="#666666" />
+            <TextView android:id="@+id/tvDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Monday, Jan 1" android:textSize="15sp" android:textColor="#666666" android:layout_marginStart="8dp" />
         </LinearLayout>
 
-        <!-- Productivity Card -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- Quick Metrics (Clickable Cards) -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="#FFFFFF">
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <!-- Card 1: Progress -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardProgress"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_check_circle" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Today's Productivity"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textColor="#1A1A1A"
-                        android:layout_marginStart="12dp" />
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#FFFFFF"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Today's Progress" android:textSize="14sp" android:textColor="#666666" />
+                    <TextView android:id="@+id/tvProgress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0%" android:textSize="32sp" android:textStyle="bold" android:textColor="#4CAF50" android:layout_marginTop="8dp" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tvProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0%"
-                    android:textSize="52sp"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif-black"
-                    android:textColor="#4CAF50"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp" />
+            <!-- Card 2: Streak -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardStreak"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#1E1E1E"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Active Streak" android:textSize="14sp" android:textColor="#B3E5FC" />
+                    <TextView android:id="@+id/tvStreak" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 Days" android:textSize="32sp" android:textStyle="bold" android:textColor="#FFFFFF" android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/progressBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:indicatorColor="#4CAF50"
-                    app:trackColor="#E0E0E0"
-                    app:trackCornerRadius="8dp"
-                    app:trackThickness="8dp"
-                    android:progress="0" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Today's Schedule Header -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Today's Schedule"
-            android:textSize="20sp"
-            android:fontFamily="sans-serif-medium"
-            android:textStyle="bold"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Empty State Text -->
-        <TextView
-            android:id="@+id/tvStats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="No activities planned yet. Tap the Schedule tab to add one."
-            android:textSize="15sp"
-            android:textColor="#666666" />
-
+        <!-- Today's Schedule -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Today's Schedule" android:textSize="20sp" android:fontFamily="sans-serif-medium" android:textStyle="bold" android:layout_marginBottom="16dp" />
+        <TextView android:id="@+id/tvStats" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No activities planned yet. Tap the Schedule tab to add one." android:textSize="15sp" android:textColor="#666666" />
     </LinearLayout>
 </ScrollView>

@@ -36,6 +36,7 @@ public class HistoryFragment extends Fragment {
         MaterialButtonToggleGroup toggleGroup = view.findViewById(R.id.toggleGroup);
 
         adapter = new HistoryAdapter();
+        adapter.setOnItemClickListener(item -> new ReviewDetailSheet(item).show(getParentFragmentManager(), "Detail"));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 

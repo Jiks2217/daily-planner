@@ -1,126 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F8F9FA"
-    android:padding="24dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nightly Performance Review"
-            android:textSize="26sp"
-            android:fontFamily="sans-serif-medium"
-            android:textStyle="bold"
-            android:textColor="#1A1A1A"
-            android:layout_marginBottom="16dp" />
-
-        <!-- AI COACH INSIGHT CARD -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
-            app:cardBackgroundColor="#1E1E1E" 
-            app:cardElevation="8dp"
-            android:layout_marginBottom="16dp">
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="AI COACH INSIGHT"
-                    android:textColor="#4CAF50"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.1"/>
-                    
-                <TextView
-                    android:id="@+id/tvAiJudgment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Analyzing your day..."
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:lineSpacingExtra="4dp"
-                    android:layout_marginTop="8dp"/>
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="#F8F9FA" android:padding="24dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nightly Review" android:textSize="26sp" android:fontFamily="sans-serif-medium" android:textStyle="bold" android:layout_marginBottom="16dp" />
+        
+        <!-- Reminders Toggle -->
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="16dp" app:cardElevation="0dp" app:strokeColor="#1976D2" app:strokeWidth="1dp" android:layout_marginBottom="16dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="12dp" android:gravity="center_vertical">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Get notified for reviews:" android:textSize="14sp" android:textStyle="bold"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnWeeklyRem" style="?attr/materialButtonOutlinedStyle" android:layout_width="wrap_content" android:layout_height="40dp" android:text="Weekly" android:textSize="12sp" android:layout_marginEnd="4dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMonthlyRem" style="?attr/materialButtonOutlinedStyle" android:layout_width="wrap_content" android:layout_height="40dp" android:text="Monthly" android:textSize="12sp" android:layout_marginEnd="4dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnYearlyRem" style="?attr/materialButtonOutlinedStyle" android:layout_width="wrap_content" android:layout_height="40dp" android:text="Yearly" android:textSize="12sp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- STATS CARD -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardElevation="2dp"
-            android:layout_marginBottom="24dp">
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-                <TextView
-                    android:id="@+id/tvCoachSummary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="You completed 0 of 0 tasks today."
-                    android:textColor="#1A1A1A"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/tvCoachCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No tasks scheduled."
-                    android:textColor="#666666"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"/>
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardBackgroundColor="#1E1E1E" app:cardElevation="8dp" android:layout_marginBottom="16dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="AI COACH INSIGHT" android:textColor="#4CAF50" android:textSize="12sp" android:textStyle="bold" android:letterSpacing="0.1"/>
+                <TextView android:id="@+id/tvAiJudgment" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Analyzing..." android:textColor="#FFFFFF" android:textSize="18sp" android:lineSpacingExtra="4dp" android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- FIXED: Used &amp; instead of & -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reflect &amp; Improve"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="2dp" android:layout_marginBottom="24dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView android:id="@+id/tvCoachSummary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Stats..." android:textColor="#1A1A1A" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:id="@+id/tvCoachCategory" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Category..." android:textColor="#666666" android:textSize="14sp" android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Biggest Accomplishment" android:layout_marginBottom="16dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Reflect &amp; Improve" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="16dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Biggest Accomplishment" android:layout_marginBottom="16dp">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/etAccomplishment" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Challenges Encountered" android:layout_marginBottom="16dp">
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Challenges Encountered" android:layout_marginBottom="16dp">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/etChallenges" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="What could I have done better?" android:layout_marginBottom="24dp">
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="What could I have done better?" android:layout_marginBottom="24dp">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/etImprove" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSaveReview"
-            android:layout_width="match_parent" android:layout_height="56dp" android:text="Save Review"
-            android:textSize="16sp" app:cornerRadius="12dp" app:backgroundTint="#1976D2" />
-
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnSaveReview" android:layout_width="match_parent" android:layout_height="56dp" android:text="Save Review" android:textSize="16sp" app:cornerRadius="12dp" app:backgroundTint="#1976D2" />
     </LinearLayout>
 </ScrollView>
