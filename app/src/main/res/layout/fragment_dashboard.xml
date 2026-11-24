@@ -16,7 +16,7 @@
             android:id="@+id/tvGreeting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Good morning, User"
+            android:text="Good morning"
             android:textSize="28sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-medium"
@@ -40,7 +40,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Monday, Jan 1"
+                android:text="Loading date..."
                 android:textSize="15sp"
                 android:textColor="#666666"
                 android:layout_marginStart="8dp" />
@@ -117,11 +117,12 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="16dp" />
 
+        <!-- Empty State Text -->
         <TextView
             android:id="@+id/tvStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="You have 5 tasks planned for today."
+            android:text="No activities planned yet. Tap the Schedule tab to add one."
             android:textSize="15sp"
             android:textColor="#666666" />
 
