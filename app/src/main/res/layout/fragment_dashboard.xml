@@ -9,75 +9,139 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/tvGreeting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Good morning, User"
-            android:textSize="28sp"
+            android:textSize="26sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-medium"
             android:textColor="#1A1A1A" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp">
-            <ImageView android:layout_width="18dp" android:layout_height="18dp" android:src="@drawable/ic_calendar" app:tint="#666666" />
-            <TextView android:id="@+id/tvDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Monday, Jan 1" android:textSize="15sp" android:textColor="#666666" android:layout_marginStart="8dp" />
-        </LinearLayout>
+            android:text="Monday, Jan 1"
+            android:textSize="15sp"
+            android:textColor="#666666"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="20dp" />
 
-        <!-- Quick Metrics (Clickable Cards) -->
-        <LinearLayout
+        <!-- 2x3 Grid of Cards -->
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
+            android:columnCount="2"
+            android:rowCount="3"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false">
 
-            <!-- Card 1: Progress -->
+            <!-- CARD 1: Progress -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardProgress"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:layout_height="140dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="#FFFFFF"
-                android:clickable="true"
-                android:focusable="true">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Today's Progress" android:textSize="14sp" android:textColor="#666666" />
-                    <TextView android:id="@+id/tvProgress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0%" android:textSize="32sp" android:textStyle="bold" android:textColor="#4CAF50" android:layout_marginTop="8dp" />
+                app:cardBackgroundColor="#E8F5E9">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center_vertical">
+                    <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_today" app:tint="#4CAF50"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Daily Progress" android:textSize="14sp" android:textColor="#666666" android:layout_marginTop="8dp"/>
+                    <TextView android:id="@+id/tvProgress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0%" android:textSize="28sp" android:textStyle="bold" android:textColor="#2E7D32" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card 2: Streak -->
+            <!-- CARD 2: Streak -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardStreak"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_height="140dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="#1E1E1E"
-                android:clickable="true"
-                android:focusable="true">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Active Streak" android:textSize="14sp" android:textColor="#B3E5FC" />
-                    <TextView android:id="@+id/tvStreak" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 Days" android:textSize="32sp" android:textStyle="bold" android:textColor="#FFFFFF" android:layout_marginTop="8dp" />
+                app:cardBackgroundColor="#FFF3E0">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center_vertical">
+                    <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_myplaces" app:tint="#FF9800"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Active Streak" android:textSize="14sp" android:textColor="#666666" android:layout_marginTop="8dp"/>
+                    <TextView android:id="@+id/tvStreak" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 Days" android:textSize="26sp" android:textStyle="bold" android:textColor="#E65100" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
 
-        <!-- Today's Schedule -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Today's Schedule" android:textSize="20sp" android:fontFamily="sans-serif-medium" android:textStyle="bold" android:layout_marginBottom="16dp" />
-        <TextView android:id="@+id/tvStats" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No activities planned yet. Tap the Schedule tab to add one." android:textSize="15sp" android:textColor="#666666" />
+            <!-- CARD 3: Weekly Average -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardWeeklyAvg"
+                android:layout_width="0dp"
+                android:layout_height="140dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#E3F2FD">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center_vertical">
+                    <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_sort_by_size" app:tint="#2196F3"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Weekly Average" android:textSize="14sp" android:textColor="#666666" android:layout_marginTop="8dp"/>
+                    <TextView android:id="@+id/tvWeeklyAvg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textSize="28sp" android:textStyle="bold" android:textColor="#1565C0" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD 4: Top Focus -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTopFocus"
+                android:layout_width="0dp"
+                android:layout_height="140dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#F3E5F5">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center_vertical">
+                    <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_agenda" app:tint="#9C27B0"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Top Focus" android:textSize="14sp" android:textColor="#666666" android:layout_marginTop="8dp"/>
+                    <TextView android:id="@+id/tvTopFocus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="None" android:textSize="20sp" android:textStyle="bold" android:textColor="#6A1B9A" android:maxLines="1" android:ellipsize="end" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD 5: Next Up -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardNextUp"
+                android:layout_width="0dp"
+                android:layout_height="140dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#E0F7FA">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center_vertical">
+                    <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_recent_history" app:tint="#00BCD4"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Next Up" android:textSize="14sp" android:textColor="#666666" android:layout_marginTop="8dp"/>
+                    <TextView android:id="@+id/tvNextUp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No tasks" android:textSize="18sp" android:textStyle="bold" android:textColor="#00838F" android:maxLines="1" android:ellipsize="end" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD 6: Review Status -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardReview"
+                android:layout_width="0dp"
+                android:layout_height="140dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#E8EAF6">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center_vertical">
+                    <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_edit" app:tint="#3F51B5"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nightly Review" android:textSize="14sp" android:textColor="#666666" android:layout_marginTop="8dp"/>
+                    <TextView android:id="@+id/tvReviewStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pending" android:textSize="18sp" android:textStyle="bold" android:textColor="#283593" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
     </LinearLayout>
 </ScrollView>
