@@ -10,9 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class DashboardFragment extends Fragment {
@@ -28,30 +30,37 @@ public class DashboardFragment extends Fragment {
         TextView tvStats = view.findViewById(R.id.tvStats);
         LinearProgressIndicator progressBar = view.findViewById(R.id.progressBar);
 
-        // 1. Set the Date (Using the phone/emulator's current time)
+        // 1. Set Date
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault());
         tvDate.setText(sdf.format(new Date()));
 
-        // 2. Get the Name from SharedPreferences
+        // 2. Set Greeting
         SharedPreferences prefs = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         String name = prefs.getString("userName", "User");
-        
-        // 3. Time-based Greeting
         int hour = new Date().getHours();
-        String greeting;
-        if (hour < 12) greeting = "Good morning, ";
-        else if (hour < 18) greeting = "Good afternoon, ";
-        else greeting = "Good evening, ";
-
+        String greeting = (hour < 12) ? "Good morning, " : (hour < 18) ? "Good afternoon, " : "Good evening, ";
         tvGreeting.setText(greeting + name);
 
-        // 4. Mock Progress (Will be replaced by Room Database in Phase 4)
-        int mockProgress = 0; 
-        tvProgress.setText(mockProgress + "%");
-        progressBar.setProgressCompat(mockProgress, true);
-        
-        // 5. Set Empty State text
-        tvStats.setText("No activities planned yet. Tap the Schedule tab to add one.");
+        // 3. Get Live Data from Database!
+        ActivityViewModel viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
+        viewModel.getAllActivities().observe(getViewLifecycleOwner(), activities -> {
+            int total = activities.size();
+            int completed = 0;
+            for (ActivityItem item : activities) {
+                if (item.isCompleted) completed++;
+            }
+
+            if (total == 0) {
+                tvStats.setText("No activities planned yet. Tap the Schedule tab to add one.");
+                tvProgress.setText("0%");
+                progressBar.setProgressCompat(0, true);
+            } else {
+                int percent = (int) (((float) completed / total) * 100);
+                tvStats.setText("You have " + total + " tasks planned. (" + completed + " completed)");
+                tvProgress.setText(percent + "%");
+                progressBar.setProgressCompat(percent, true);
+            }
+        });
 
         return view;
     }
