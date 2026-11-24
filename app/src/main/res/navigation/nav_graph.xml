@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph" app:startDestination="@id/nav_home">
+<navigation xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph" 
+    app:startDestination="@id/nav_setup">
+
+    <!-- Setup Screen -->
+    <fragment 
+        android:id="@+id/nav_setup" 
+        android:name="com.group5.dailyplanner.SetupFragment" 
+        android:label="Setup">
+        <action 
+            android:id="@+id/action_setup_to_dashboard" 
+            app:destination="@id/nav_home" />
+    </fragment>
+
+    <!-- Main Tabs -->
     <fragment android:id="@+id/nav_home" android:name="com.group5.dailyplanner.DashboardFragment" android:label="Home" />
     <fragment android:id="@+id/nav_schedule" android:name="com.group5.dailyplanner.ScheduleFragment" android:label="Schedule" />
     <fragment android:id="@+id/nav_review" android:name="com.group5.dailyplanner.ReviewFragment" android:label="Review" />
