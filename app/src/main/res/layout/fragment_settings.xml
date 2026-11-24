@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -192,7 +191,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Daily Planner &amp; Productivity Coach&#10;Version 1.0.0&#10;Developed by Group 5 (Jerry, AI, Zaliya, Daniel)&#10;Footer by tazerkraze"
+                    android:text="Daily Planner &amp; Productivity Coach&#10;Version 1.0.0&#10;Developed by tazerkraze"
                     android:textColor="#B3E5FC"
                     android:textSize="14sp"
                     android:lineSpacingExtra="4dp" />
