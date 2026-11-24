@@ -19,7 +19,7 @@ public interface ActivityDao {
     @Delete
     void delete(ActivityItem activity);
 
-    // Automatically updates the UI when data changes
-    @Query("SELECT * FROM activities ORDER BY time ASC")
+    // We changed 'time' to 'startTime' here so it matches the new database table
+    @Query("SELECT * FROM activities ORDER BY startTime ASC")
     LiveData<List<ActivityItem>> getAllActivities();
 }
