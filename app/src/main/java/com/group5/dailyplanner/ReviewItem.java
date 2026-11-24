@@ -7,14 +7,16 @@ import androidx.room.PrimaryKey;
 public class ReviewItem {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public String date; // Format: "yyyy-MM-dd"
+    public String date;
+    public int score; // 0 to 100
     public String accomplishment;
     public String challenges;
     public String learned;
     public String improve;
 
-    public ReviewItem(String date, String accomplishment, String challenges, String learned, String improve) {
+    public ReviewItem(String date, int score, String accomplishment, String challenges, String learned, String improve) {
         this.date = date;
+        this.score = score;
         this.accomplishment = accomplishment;
         this.challenges = challenges;
         this.learned = learned;
