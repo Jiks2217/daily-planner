@@ -8,13 +8,15 @@ public class ActivityItem {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public String title;
-    public String time;
+    public String startTime; // e.g., "10:00 AM"
+    public String endTime;   // e.g., "11:00 AM"
     public String category;
     public boolean isCompleted;
 
-    public ActivityItem(String title, String time, String category) {
+    public ActivityItem(String title, String startTime, String endTime, String category) {
         this.title = title;
-        this.time = time;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.category = category;
         this.isCompleted = false;
     }

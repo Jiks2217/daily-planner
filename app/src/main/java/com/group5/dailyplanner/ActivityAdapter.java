@@ -27,10 +27,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public ActivityItem getActivityAt(int position) {
-        return activities.get(position);
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,9 +38,9 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ActivityItem current = activities.get(position);
         holder.tvTitle.setText(current.title);
-        holder.tvDetails.setText(current.time + " • " + current.category);
+        // Display Start Time -> End Time
+        holder.tvDetails.setText(current.startTime + " - " + current.endTime + " • " + current.category);
         
-        // Remove old listener to prevent bugs when scrolling
         holder.cbComplete.setOnCheckedChangeListener(null);
         holder.cbComplete.setChecked(current.isCompleted);
 

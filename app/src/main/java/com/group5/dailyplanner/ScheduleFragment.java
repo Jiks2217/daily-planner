@@ -1,5 +1,9 @@
 package com.group5.dailyplanner;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +21,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-import java.util.List;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ScheduleFragment extends Fragment {
     private ActivityViewModel viewModel;
     private ActivityAdapter adapter;
     private TextView tvEmpty;
     private RecyclerView recyclerView;
+
+    private String selectedStartTime = "";
+    private String selectedEndTime = "";
 
     @Nullable
     @Override
@@ -34,33 +44,23 @@ public class ScheduleFragment extends Fragment {
         tvEmpty = view.findViewById(R.id.tvEmpty);
         FloatingActionButton fabAdd = view.findViewById(R.id.fabAdd);
 
-        // Setup RecyclerView
         adapter = new ActivityAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        // Setup ViewModel
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
         
-        // Observe Database Changes
         viewModel.getAllActivities().observe(getViewLifecycleOwner(), activities -> {
             adapter.setActivities(activities);
-            if (activities.isEmpty()) {
-                tvEmpty.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-            } else {
-                tvEmpty.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-            }
+            tvEmpty.setVisibility(activities.isEmpty() ? View.VISIBLE : View.GONE);
+            recyclerView.setVisibility(activities.isEmpty() ? View.GONE : View.VISIBLE);
         });
 
-        // Handle Checkbox clicks
         adapter.setOnItemClickListener((item, isChecked) -> {
             item.isCompleted = isChecked;
             viewModel.update(item);
         });
 
-        // Handle FAB click
         fabAdd.setOnClickListener(v -> showAddDialog());
 
         return view;
@@ -69,29 +69,110 @@ public class ScheduleFragment extends Fragment {
     private void showAddDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_activity, null);
         TextInputEditText etTitle = dialogView.findViewById(R.id.etTitle);
-        TextInputEditText etTime = dialogView.findViewById(R.id.etTime);
+        TextInputEditText etStartTime = dialogView.findViewById(R.id.etStartTime);
+        TextInputEditText etEndTime = dialogView.findViewById(R.id.etEndTime);
         AutoCompleteTextView dropdown = dialogView.findViewById(R.id.dropdownCategory);
 
-        // Setup Category Dropdown
         String[] categories = {"Education", "Software Dev", "Business", "Personal", "Fitness", "Meetings", "Rest"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categories);
         dropdown.setAdapter(adapter);
+
+        // Open Clock when clicking Start Time
+        etStartTime.setOnClickListener(v -> {
+            MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(8).setMinute(0)
+                    .setTitleText("Select Start Time")
+                    .build();
+            picker.show(getParentFragmentManager(), "START_TIME");
+            picker.addOnPositiveButtonClickListener(dialog -> {
+                int hour = picker.getHour();
+                int minute = picker.getMinute();
+                selectedStartTime = String.format(Locale.getDefault(), "%02d:%02d %s", 
+                        (hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour)), 
+                        minute, (hour >= 12 ? "PM" : "AM"));
+                etStartTime.setText(selectedStartTime);
+            });
+        });
+
+        // Open Clock when clicking End Time
+        etEndTime.setOnClickListener(v -> {
+            MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(9).setMinute(0)
+                    .setTitleText("Select End Time")
+                    .build();
+            picker.show(getParentFragmentManager(), "END_TIME");
+            picker.addOnPositiveButtonClickListener(dialog -> {
+                int hour = picker.getHour();
+                int minute = picker.getMinute();
+                selectedEndTime = String.format(Locale.getDefault(), "%02d:%02d %s", 
+                        (hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour)), 
+                        minute, (hour >= 12 ? "PM" : "AM"));
+                etEndTime.setText(selectedEndTime);
+            });
+        });
 
         new AlertDialog.Builder(requireContext())
                 .setView(dialogView)
                 .setPositiveButton("Save", (dialog, which) -> {
                     String title = etTitle.getText().toString().trim();
-                    String time = etTime.getText().toString().trim();
                     String category = dropdown.getText().toString().trim();
 
-                    if (title.isEmpty() || time.isEmpty() || category.isEmpty()) {
+                    if (title.isEmpty() || selectedStartTime.isEmpty() || selectedEndTime.isEmpty() || category.isEmpty()) {
                         Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    viewModel.insert(new ActivityItem(title, time, category));
+                    // 1. Save to Database
+                    viewModel.insert(new ActivityItem(title, selectedStartTime, selectedEndTime, category));
+
+                    // 2. Set the Alarms (Vibrate at Start and End)
+                    scheduleAlarm(title, selectedStartTime, "Time to start: " + title);
+                    scheduleAlarm(title, selectedEndTime, "Time is up for: " + title);
+                    
+                    Toast.makeText(getContext(), "Task and Alarms Saved!", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    private void scheduleAlarm(String title, String timeString, String message) {
+        try {
+            // Parse "10:30 AM" into a Calendar object for TODAY
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm a", Locale.getDefault());
+            java.util.Date date = sdf.parse(timeString);
+            
+            Calendar calendar = Calendar.getInstance();
+            Calendar now = Calendar.getInstance();
+            if (date != null) {
+                Calendar timeCal = Calendar.getInstance();
+                timeCal.setTime(date);
+                calendar.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+                calendar.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+                calendar.set(Calendar.SECOND, 0);
+
+                // If the time has already passed today, schedule for tomorrow
+                if (calendar.before(now)) {
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                }
+            }
+
+            AlarmManager alarmManager = (AlarmManager) requireContext().getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(requireContext(), AlarmReceiver.class);
+            intent.putExtra("title", title);
+            intent.putExtra("message", message);
+            
+            // Unique ID for each alarm based on time so they don't override each other
+            int requestCode = (int) System.currentTimeMillis(); 
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(requireContext(), requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+            if (alarmManager != null) {
+                // setExactAndAllowWhileIdle ensures it rings even if phone is asleep
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
