@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.text.SimpleDateFormat;
@@ -42,17 +42,15 @@ public class ReviewFragment extends Fragment {
         TextView tvAiJudgment = view.findViewById(R.id.tvAiJudgment);
 
         currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-
         reviewViewModel = new ViewModelProvider(this).get(ReviewViewModel.class);
         activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
-        // THE REASONING ENGINE & SCORE CALCULATION
         activityViewModel.getAllActivities().observe(getViewLifecycleOwner(), activities -> {
             int total = activities.size();
             if (total == 0) {
                 tvCoachSummary.setText("You completed 0 of 0 tasks today.");
                 tvCoachCategory.setText("No tasks scheduled.");
-                tvAiJudgment.setText("You didn't schedule any tasks today. A blank canvas! Take a moment to plan for tomorrow so we can build momentum.");
+                tvAiJudgment.setText("You didn't schedule any tasks today. A blank canvas! Take a moment to plan for tomorrow.");
                 tvAiJudgment.setTextColor(Color.parseColor("#B3E5FC"));
                 currentScore = 0;
                 return;
@@ -73,62 +71,35 @@ public class ReviewFragment extends Fragment {
             String dominantFocus = "None";
             int maxCompleted = 0;
             for (Map.Entry<String, Integer> entry : completedCategories.entrySet()) {
-                if (entry.getValue() > maxCompleted) {
-                    maxCompleted = entry.getValue();
-                    dominantFocus = entry.getKey();
-                }
+                if (entry.getValue() > maxCompleted) { maxCompleted = entry.getValue(); dominantFocus = entry.getKey(); }
             }
 
             String neglectedArea = "";
             int maxMissed = 0;
             for (Map.Entry<String, Integer> entry : scheduledCategories.entrySet()) {
-                String cat = entry.getKey();
-                int scheduled = entry.getValue();
-                int done = completedCategories.getOrDefault(cat, 0);
-                int missed = scheduled - done;
-                if (missed > maxMissed) {
-                    maxMissed = missed;
-                    neglectedArea = cat;
-                }
+                int missed = entry.getValue() - completedCategories.getOrDefault(entry.getKey(), 0);
+                if (missed > maxMissed) { maxMissed = missed; neglectedArea = entry.getKey(); }
             }
 
             currentScore = (int) (((float) completed / total) * 100);
             tvCoachSummary.setText(String.format(Locale.getDefault(), "You completed %d of %d tasks (%d%%).", completed, total, currentScore));
-            
-            if (!dominantFocus.equals("None")) {
-                tvCoachCategory.setText("Most focus on: " + dominantFocus);
-            }
+            if (!dominantFocus.equals("None")) tvCoachCategory.setText("Most focus on: " + dominantFocus);
 
-            // AI LOGIC
             String judgment;
             int color;
 
             if (completed == total) {
                 color = Color.parseColor("#81C784");
-                if (total >= 5) {
-                    judgment = "Outstanding! You crushed all " + total + " tasks today, primarily focusing on " + dominantFocus + ". This is elite discipline. Be careful of burnout.";
-                } else {
-                    judgment = "Perfect score! You completed everything you set out to do today, focusing on " + dominantFocus + ". A flawless execution.";
-                }
+                judgment = total >= 5 ? "Outstanding! You crushed all " + total + " tasks today, primarily focusing on " + dominantFocus + ". This is elite discipline." : "Perfect score! You completed everything you set out to do today.";
             } else if (currentScore >= 70) {
                 color = Color.parseColor("#81C784");
                 judgment = "Strong performance. You completed " + currentScore + "% of your tasks. You nailed your " + dominantFocus + " goals, but fell short on " + neglectedArea + ". Let's prioritize " + neglectedArea + " tomorrow.";
             } else if (currentScore >= 30) {
                 color = Color.parseColor("#FFB74D");
-                if (!neglectedArea.isEmpty()) {
-                    judgment = "You made decent progress, completing " + completed + " tasks. However, " + neglectedArea + " was left entirely behind. Try time-blocking for " + neglectedArea + " tomorrow.";
-                } else {
-                    judgment = "You completed " + currentScore + "% of your goals. It's a slow burn, but progress is progress. Consider breaking your remaining tasks into smaller, easier chunks tomorrow.";
-                }
+                judgment = !neglectedArea.isEmpty() ? "You made decent progress. However, " + neglectedArea + " was left entirely behind. Try time-blocking for " + neglectedArea + " tomorrow." : "You completed " + currentScore + "% of your goals. It's a slow burn, but progress is progress.";
             } else {
                 color = Color.parseColor("#E57373");
-                if (total > 5) {
-                    judgment = "It looks like you over-planned today. You scheduled " + total + " tasks but only completed " + completed + ". Overwhelming yourself causes paralysis. Tomorrow, schedule a maximum of 3 core tasks.";
-                } else if (!neglectedArea.isEmpty()) {
-                    judgment = "A tough day. You only completed " + completed + " out of " + total + " tasks, and completely missed your " + neglectedArea + " goal. Don't beat yourself up. Reflect on what blocked you.";
-                } else {
-                    judgment = "A very unproductive day. You only finished " + completed + " tasks. Let's do a hard reset tomorrow. Set just one small goal and build momentum from there.";
-                }
+                judgment = total > 5 ? "It looks like you over-planned today. You scheduled " + total + " tasks but only completed " + completed + ". Tomorrow, schedule a maximum of 3 core tasks." : "A tough day. You only completed " + completed + " out of " + total + " tasks. Reflect on what blocked you, and try again tomorrow.";
             }
             
             tvAiJudgment.setText(judgment);
@@ -168,8 +139,11 @@ public class ReviewFragment extends Fragment {
             
             Toast.makeText(getContext(), "Review saved! Navigating to Report Card...", Toast.LENGTH_SHORT).show();
             
-            // Automatically navigate to History tab to show the score!
-            Navigation.findNavController(view).navigate(R.id.nav_history);
+            // THE FIX: Force the Bottom Navigation to switch to History tab
+            BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_navigation);
+            if (bottomNav != null) {
+                bottomNav.setSelectedItemId(R.id.nav_history);
+            }
         });
 
         return view;

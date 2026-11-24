@@ -14,11 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class DashboardFragment extends Fragment {
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,18 +28,15 @@ public class DashboardFragment extends Fragment {
         TextView tvStats = view.findViewById(R.id.tvStats);
         LinearProgressIndicator progressBar = view.findViewById(R.id.progressBar);
 
-        // 1. Set Date
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault());
         tvDate.setText(sdf.format(new Date()));
 
-        // 2. Set Greeting
         SharedPreferences prefs = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         String name = prefs.getString("userName", "User");
         int hour = new Date().getHours();
         String greeting = (hour < 12) ? "Good morning, " : (hour < 18) ? "Good afternoon, " : "Good evening, ";
         tvGreeting.setText(greeting + name);
 
-        // 3. Get Live Data from Database!
         ActivityViewModel viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
         viewModel.getAllActivities().observe(getViewLifecycleOwner(), activities -> {
             int total = activities.size();
