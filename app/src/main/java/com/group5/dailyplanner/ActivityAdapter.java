@@ -1,5 +1,7 @@
 package com.group5.dailyplanner;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,11 +40,21 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ActivityItem current = activities.get(position);
         holder.tvTitle.setText(current.title);
-        // Display Start Time -> End Time
         holder.tvDetails.setText(current.startTime + " - " + current.endTime + " • " + current.category);
         
         holder.cbComplete.setOnCheckedChangeListener(null);
         holder.cbComplete.setChecked(current.isCompleted);
+
+        // HCI EFFECT: Strike-through and fade if completed
+        if (current.isCompleted) {
+            holder.tvTitle.setPaintFlags(holder.tvTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tvTitle.setTextColor(Color.parseColor("#999999"));
+            holder.tvDetails.setTextColor(Color.parseColor("#BBBBBB"));
+        } else {
+            holder.tvTitle.setPaintFlags(holder.tvTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.tvTitle.setTextColor(Color.parseColor("#1A1A1A"));
+            holder.tvDetails.setTextColor(Color.parseColor("#666666"));
+        }
 
         holder.cbComplete.setOnClickListener(v -> {
             if (listener != null) {
